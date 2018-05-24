@@ -98,19 +98,101 @@ describe('blog posts API resource', function() {
   });
 
   // POST
-  // describe('POST endpoint', function() {
-  //   it('should add a new blog post', function() {
-  //     // make a POST request with data
-  //     const newPost = {
-  //       title: faker.lorem.sentence(),
-  //       author: {
-  //         firstName: faker.name.firstName(),
-  //         lastName: faker.name.lastName(),
-  //       },
-  //       content: faker.lorem.text()
-  //     };
-  //   })
-  // })
+  describe('POST endpoint', function() {
+    it('should add a new blog post', function() {
+      // make a POST request with data
+      const newPost = {
+        title: faker.lorem.sentence(),
+        author: {
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+        },
+          content: faker.lorem.text()
+      };
+
+      return chai.request(app)
+      // send newPost to /post 
+        .post('/posts')
+        .send(newPost)
+        .then(function(res) {
+          res.should.have.status(201);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.should.include.keys(
+            'id', 'title', 'content', 'author', 'created');
+          res.body.title.should.equal(newPost.title);
+          // Mongo should have created id on insertion
+          return BlogPost.findById(res.body.id);
+        })
+      // compare newPost to BlogPost.findById(res.body.id)
+        .then(function(post) {
+          post.title.should.equal(newPost.title);
+          post.content.should.equal(newPost.content);
+          post.author.firstName.should.equal(newPost.author.firstName);
+          post.author.lastName.should.equal(newPost.author.lastName);
+        });
+    });
+  });
+
+  // PUT
+  describe('PUT endpoint', function() {
+    it('should update fields you send over', function() {
+      // create updated data
+      const updateData = {
+        title: 'Sushi is delicious',
+        content: 'Ahi, sake, hamachi',
+        author: {
+          firstName: 'Fish',
+          lasName: 'Lover'
+        }
+      };
+      return BlogPost
+      // Get an existing post
+        .findOne()
+        // assign updateData's id to that existing post's id
+        .then(post => {
+          updateData.id = post.id;
+          return chai.request(app)
+          // make a PUT request with updateData
+            .put(`/posts/${post.id}`)
+            .send(updateData);
+        })
+        // return the data of BlogPost with updateData's id
+        .then(res => {
+          res.should.have.status(204);
+          return BlogPost.findById(updateData.id);
+        })
+        // compare updateData to BlogPost.findById(updateData.id)
+        .then(post => {
+          post.title.should.equal(updateData.title);
+          post.content.should.equal(updateData.content);
+          post.author.firstName.should.equal(updateData.author.firstName);
+          post.author.lastName.should.equal(updateData.author.lastName);
+        });
+    });
+  });
+  describe('DELETE endpoint', function() {
+    it('should delete a post by id', function() {
+      let post;
+      return BlogPost
+        // get a post
+        .findOne()
+        .then(_post => {
+          post = _post;
+          // DELETE request for that post's id
+          return chai.request(app).delete(`/posts/${post.id}`);
+        })
+        .then(res => {
+          res.should.have.status(204);
+          // look for deleted post
+          return BlogPost.findById(post.id);
+        })
+        .then(_post => {
+          should.not.exist(_post);
+        });
+    });
+  });
+
 });
 
 
