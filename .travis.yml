@@ -2,3 +2,10 @@ language: node_js
 node_js: node
 services:
 - mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: VZLL0spDck5SYZ5eAGXKRPBO1o35jBbxnrPnBgW+FPYeV+ojkiKbv9CN1yqvlLiupJbRv1fpSQhfmtOgQOF/9PYsyCcMlMHJ3KMHJAV/sx+iTnpXY+KAQkOu4g/O4lAKvJ9eAmnomDSYDHHyRzvSDEENSviB9KOP2iPNPsxXJ5fafK/ROfOb+r+W42IDOIS12CygSwMrNoi1BgtjjOlnYyPLP1H3OWuVbYBp7oz/c3Lsgw45MnHBUiKTrrkHiew6eYB7vlALWdFL4ebYjPMqfu7O/se8L/EYkedorTtMVF1m6vKY4dhFjVmEoRhSeSXWx7f+sLVVP4NxexLOhSSEYDQYGYKWkNMnn1/Clyw4+Jk5fv40j2l4ATYJB5pqdteshipOdRjI0IhkFmowOQl6U223ZDknTBz55zHYta6QnclflCx1Nq/Tlc04P8ZlRq49VXGkWhoSqA/8KMC9bqUFteDpxe3XBiC3lzOsgnx681saGOBnqD3Rr7BOmDZnTovDblcgcmx7pB53Pe184lyTvqUO1mZfSpR4ADx8Nr1IckmH+YQYhz6B3Fus16lV/mPoefKcPm7Q614jFQmwqs35joEkFpQCeK4cJFEBsIqjYwQ6O89bGnVOYsZwpdhGLbOdeu39yEYf0EBq4q+vxgJ+q+/CQH/zAjveFM2N1V0C4J8=
+  app: peaceful-ravine-60986
+  on:
+    repo: FrancesFisk/blog-app-mongoose-challenge-solution
