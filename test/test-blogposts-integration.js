@@ -143,7 +143,7 @@ describe('blog posts API resource', function() {
         content: 'Ahi, sake, hamachi',
         author: {
           firstName: 'Fish',
-          lasName: 'Lover'
+          lastName: 'Lover'
         }
       };
       return BlogPost
@@ -151,19 +151,21 @@ describe('blog posts API resource', function() {
         .findOne()
         // assign updateData's id to that existing post's id
         .then(post => {
-          updateData.id = post.id;
+          updateData.id = post._id;
           return chai.request(app)
           // make a PUT request with updateData
-            .put(`/posts/${post.id}`)
+            .put(`/posts/${post._id}`)
             .send(updateData);
         })
         // return the data of BlogPost with updateData's id
         .then(res => {
+          // console.log('console log res ', res);
           res.should.have.status(204);
           return BlogPost.findById(updateData.id);
         })
         // compare updateData to BlogPost.findById(updateData.id)
         .then(post => {
+          console.log('console logging ', post);
           post.title.should.equal(updateData.title);
           post.content.should.equal(updateData.content);
           post.author.firstName.should.equal(updateData.author.firstName);
@@ -171,6 +173,7 @@ describe('blog posts API resource', function() {
         });
     });
   });
+
   describe('DELETE endpoint', function() {
     it('should delete a post by id', function() {
       let post;
